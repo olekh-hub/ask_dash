@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - wybór datasetu</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <h1 class="mb-4">Dashboard - wybierz dataset</h1>
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-auto">
+            <label for="dataset" class="form-label">Dataset:</label>
+            <select id="dataset" name="dataset" class="form-select" onchange="this.form.submit()">
+                {% for name in dataset_names %}
+                <option value="{{ name }}" {% if name == selected_dataset %}selected{% endif %}>{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+    <div id="plot_div"></div>
+</div>
+<script>
+    var plot_data = {{ plot_json | safe }};
+    Plotly.newPlot('plot_div', plot_data.data, plot_data.layout);
+</script>
+</body>
+</html>
