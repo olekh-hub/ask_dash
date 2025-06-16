@@ -14,7 +14,7 @@ DATA_DIR = os.path.join(BASE_DIR, 'data')
 DATASETS = {
     'daily': os.path.join(DATA_DIR, 'daily_bikes.csv'),
     'weekday': os.path.join(DATA_DIR, 'weekday_bike.csv'),
-    'monthly': os.path.join(DATA_DIR, 'month_bike.csv'),
+    'hourly': os.path.join(DATA_DIR, 'hour_bike.csv'),
 }
 
 # Wczytywanie wszystkich plików do słownika DataFrame
@@ -71,18 +71,15 @@ def index():
                 fig = px.line(df, x='DayName', y='Total',
                               title='weekday - Średnia liczba rowerzystów na moście w poszczególne dni tygodnia',
                               labels={'DayName': 'Dzień tygodnia', 'Total': 'Średnia'})
-            elif selected == 'monthly':
+            elif selected == 'hourly':
                 average = int(df['Total'].mean())
                 max_count = int(df['Total'].max())
                 df = df.reset_index(drop=True)
-                df['Index'] = df.index
+                df['Hour'] = df.index
                 # Przyjmujemy 12 wierszy: miesiące
-                reorder = {0: 'January', 1: 'February', 2: 'March', 3: 'April', 4: 'May',
-                           5: 'June', 6: 'July', 7: 'August', 8: 'September', 9: 'October',
-                           10: 'November', 11: 'December'}
-                df['MonthName'] = df['Index'].map(reorder)
-                fig = px.line(df, x='MonthName', y='Total',
-                              title='monthly - Średnia liczba rowerzystów na moście w poszczególne miesiące',
+                # df['MonthName'] = df['Index'].map(reorder)
+                fig = px.line(df, x='Hour', y='Total',
+                              title='monthly - Średnia liczba rowerzystów na moście w poszczególne godziny',
                               labels={'MonthName': 'Miesiąc', 'Total': 'Średnia'})
             else:
                 # Dla innych datasetów, wykres ogólny
