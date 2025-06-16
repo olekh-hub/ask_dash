@@ -6,18 +6,21 @@
     <title>Dashboard - rowerzyści</title>
     <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
 </head>
-<body>
-<nav class="navbar navbar-dark bg-dark mb-4">
+<body class="d-flex flex-column min-vh-100">
+<nav class="navbar navbar-light bg-light mb-4">
   <div class="container-fluid">
+      <img src="../static/Znak_graficzny_AGH.svg.png" alt="Logo" height=60 class="me-2">
     <span class="navbar-brand mb-0 h1">Ruch rowerowy – Fremont Bridge</span>
   </div>
 </nav>
-<div class="container mt-4">
+<div class="container mt-4 flex-grow-1">
     <h1 class="mb-4">Dashboard - wybierz częstotliwość</h1>
     <form method="get" class="row g-3 mb-4">
         <div class="col-auto">
-            <label for="dataset" class="form-label">Częstotliwość:</label>
+            <label for="dataset" class="form-label"><i class="bi bi-clock-history"></i> Częstotliwość danych</label>
             <select id="dataset" name="dataset" class="form-select" onchange="this.form.submit()">
                 {% for name in dataset_names %}
                 <option value="{{ name }}" {% if name == selected_dataset %}selected{% endif %}>{{ name }}</option>
@@ -27,7 +30,7 @@
     </form>
     <div class="row text-center mb-3">
         <div class="col">
-            <h6 class="text-muted">Średnia dzienna</h6>
+            <h6 class="text-muted">Średni ruch</h6>
             <span class="badge bg-primary fs-6">{{ average }}</span>
         </div>
         <div class="col">
@@ -40,12 +43,13 @@
 <div class="container text-center mt-4">
     Wyświetlane dane to dane na temat ruchu rowerowego na moście Fremont Bridge w Seattle pobrane ze strony <a href="https://data.seattle.gov/Transportation/Fremont-Bridge-Bicycle-Counter/65db-xm6k">https://data.seattle.gov/Transportation/Fremont-Bridge-Bicycle-Counter/65db-xm6k</a>.
 </div>
+<footer class="bg-light text-center mt-5 py-3">
+  <small>Projekt edukacyjny wykonany przez A.Homa, K.Gumoś – dane z
+      <a href="https://data.seattle.gov/">Seattle Open Data</a></small>
+</footer>
 <script>
     var plot_data = {{ plot_json | safe }};
     Plotly.newPlot('plot_div', plot_data.data, plot_data.layout);
 </script>
-<footer class="bg-light text-center mt-5 py-3">
-  <small>Projekt edukacyjny wykonany przez A.Homa, K.Gumoś – dane z <a href="https://data.seattle.gov/">Seattle Open Data</a></small>
-</footer>
 </body>
 </html>

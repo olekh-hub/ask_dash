@@ -55,9 +55,9 @@ def index():
             if selected == 'daily':
                 average = int(df['Total'].mean())
                 max_count = int(df['Total'].max())
-                fig = px.line(df, x='Index', y='Total',
+                fig = px.line(df, x='Date', y='Total',
                               title='daily - Średnia dzienna liczba rowerzystów na moście',
-                              labels={'Index': 'Dzień', 'Total': 'Średnia'})
+                              labels={'Index': 'Dzień roku', 'Total': 'Średnia'})
             elif selected == 'weekday':
                 average = int(df['Total'].mean())
                 max_count = int(df['Total'].max())
@@ -76,11 +76,12 @@ def index():
                 max_count = int(df['Total'].max())
                 df = df.reset_index(drop=True)
                 df['Hour'] = df.index
+                df['HourLabel'] = df['Hour'].astype(str) + ':00'
                 # Przyjmujemy 12 wierszy: miesiące
                 # df['MonthName'] = df['Index'].map(reorder)
-                fig = px.line(df, x='Hour', y='Total',
+                fig = px.line(df, x='HourLabel', y='Total',
                               title='monthly - Średnia liczba rowerzystów na moście w poszczególne godziny',
-                              labels={'MonthName': 'Miesiąc', 'Total': 'Średnia'})
+                              labels={'Hour': 'Godzina', 'Total': 'Średnia'})
             else:
                 # Dla innych datasetów, wykres ogólny
                 fig = px.line(df, x='Index', y='Total',
