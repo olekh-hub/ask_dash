@@ -40,6 +40,9 @@ def index():
     # Wybór datasetu z parametru GET
     selected = request.args.get('dataset') or next(iter(dataframes.keys()))
 
+    average = 0
+    max_count = 0
+
     fig = None
     if selected in dataframes:
         df = dataframes[selected].copy()
@@ -50,10 +53,14 @@ def index():
             df['Index'] = df.index
             # Rysuj w zależności od klucza
             if selected == 'daily':
+                average = int(df['Total'].mean())
+                max_count = int(df['Total'].max())
                 fig = px.line(df, x='Index', y='Total',
-                              title='daily - średnia dzienna liczba rowerzystów na moście',
+                              title='daily - Średnia dzienna liczba rowerzystów na moście',
                               labels={'Index': 'Dzień', 'Total': 'Średnia'})
             elif selected == 'weekday':
+                average = int(df['Total'].mean())
+                max_count = int(df['Total'].max())
                 # Przyjmujemy, że df ma 7 wierszy dla dni tygodnia w kolejności poniedziałek=0...
                 df = df.reset_index(drop=True)
                 df['Index'] = df.index
@@ -62,9 +69,11 @@ def index():
                            4: 'Friday', 5: 'Saturday', 6: 'Sunday'}
                 df['DayName'] = df['Index'].map(reorder)
                 fig = px.line(df, x='DayName', y='Total',
-                              title='weekday - średnia liczba rowerzystów na moście w poszczególne dni tygodnia',
+                              title='weekday - Średnia liczba rowerzystów na moście w poszczególne dni tygodnia',
                               labels={'DayName': 'Dzień tygodnia', 'Total': 'Średnia'})
             elif selected == 'monthly':
+                average = int(df['Total'].mean())
+                max_count = int(df['Total'].max())
                 df = df.reset_index(drop=True)
                 df['Index'] = df.index
                 # Przyjmujemy 12 wierszy: miesiące
@@ -73,7 +82,7 @@ def index():
                            10: 'November', 11: 'December'}
                 df['MonthName'] = df['Index'].map(reorder)
                 fig = px.line(df, x='MonthName', y='Total',
-                              title='monthly - średnia liczba rowerzystów na moście w poszczególne miesiące',
+                              title='monthly - Średnia liczba rowerzystów na moście w poszczególne miesiące',
                               labels={'MonthName': 'Miesiąc', 'Total': 'Średnia'})
             else:
                 # Dla innych datasetów, wykres ogólny
@@ -88,7 +97,9 @@ def index():
     plot_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return render_template('index.html', dataset_names=list(dataframes.keys()),
                            selected_dataset=selected,
-                           plot_json=plot_json)
+                           plot_json=plot_json,
+                           average=average,
+                           max_count=max_count)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
